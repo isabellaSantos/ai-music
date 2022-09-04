@@ -1,0 +1,24 @@
+{% extends 'global/base.html' %}
+
+{% block title %}Análise{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+  <div class="main-content">
+    <h1>
+      Olá<br>
+      {{ spotify_user.username }}
+    </h1>
+  </div>
+  <div class="description-content content--centered">
+    <p class="description-text">
+      Tudo certo, conseguimos acessar suas músicas mais tocadas! Clique no botão para descobrir qual seu gosto musical.
+    </p>
+    <div class="description-button">
+      <a href="{% url 'analyse' spotify_user.username %}">ver resultado</a>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

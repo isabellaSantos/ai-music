@@ -1,0 +1,32 @@
+{% extends 'global/base.html' %}
+
+{% block title %}Análise{% endblock title %}
+
+{% block content %}
+
+<div class="container">
+  <div class="main-content">
+    <h1>{{ title }}</h1>
+  </div>
+  <div class="description-content description--analysis">
+    <h3>
+      Aqui vai a classificação das suas músicas:
+    </h3>
+    {% for item in texts %}
+      <p>> {{ item.percentage }}% {{ item.description }}</p>
+    {% endfor %}
+    <p>> entre outros...</p>
+
+    <h3>Você anda escutando muito essas músicas:</h3>
+    {% for item in top_tracks %}
+      <p>> {{ item }}</p>
+    {% endfor %}
+      
+    <h3>Esses são seus artistas favoritos:</h3>
+    {% for item in top_artists %}
+      <p>> {{ item }}</p>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,106 @@
+:root {
+  --primary-color: #eb9fbe;
+  --secondary-color: #f37d3f;
+  --primary-font-color: #ffffff;
+  --secondary-font-color: #ffffff;
+  --footer-color:  #000000;
+  --footer-font-color: #ffffff;
+  --spotify-color: #1DB954;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inconsolata', monospace;
+}
+
+header {
+  background-color: var(--primary-color);
+  color: var(--primary-font-color);
+  padding: 2em 1em;
+  text-align: center;
+  font-weight: 600;
+}
+
+header p {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  min-height: 120vh;
+}
+
+.content--centered {
+  display: grid;
+  text-align: center;
+}
+
+.content--centered > * {
+  place-self: center;
+}
+
+.main-content {
+  background-color: var(--secondary-color);
+  color: var(--secondary-font-color);
+  grid-column-start: span 3;
+  padding: 2em 3em;
+}
+
+.main-content h1 {
+  font-size: 4em;
+  word-wrap: break-word;
+}
+
+.description-content {
+  grid-column-start: span 4;
+  padding: 1em;
+}
+
+.description-text {
+  width: 70%;
+}
+
+.description-button {
+  place-self: auto;
+}
+
+.description-button a {
+  background-color: var(--spotify-color);
+  color: var(--secondary-font-color);
+  text-decoration: none;
+  padding: 1.5rem;
+  border-radius: 50px;
+}
+
+.description-button a:hover {
+  font-weight: 600;
+  border: 2px solid #000;
+  color: #000;
+}
+
+.description--analysis {
+  padding: 2em 4em;
+}
+
+.description--analysis h3 {
+  margin-top: 3em;
+}
+
+footer {
+  background-color: var(--footer-color);
+  padding: 10px;
+  color: var(--footer-font-color);
+  font-size: 0.9rem;
+}
+
+footer p {
+  margin: 0px;
+  text-align: center;
+}
+
+footer a {
+  color: var(--footer-font-color);
+}
