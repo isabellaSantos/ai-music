@@ -33,6 +33,15 @@ class SpotifyTrack(models.Model):
   def __str__(self):
     return self.spotify_id
 
+class TrackPrediction(models.Model):
+  classification_id = models.IntegerField(default=0, unique=True)
+  name = models.CharField(max_length=250)
+  title = models.CharField(max_length=250)
+  description = models.CharField(max_length=250)
+
+  def __str__(self):
+    return self.name
+
 class SpotifyAPI:
   def authenticate(token):
     auth_manager = spotipy.oauth2.SpotifyOAuth(client_id=os.environ.get('SPOTIPY_CLIENT_ID'),
@@ -145,7 +154,7 @@ class SpotifyAPIUser:
 
     return user
 
-class TrackPrediction:
+class TrackPredictionOld:
   def classification():
     options = [
       {'id': 1, 'name': 'kpop dinossauro', 'title': 'kpoper-old-school', 'description': 'kpop das antigas, de SHINEe para trás'},
@@ -175,7 +184,7 @@ class TrackPrediction:
 
   def format_prediction(prediction_array):
     prediction = dict(sorted(prediction_array.items(), key=lambda item: item[1], reverse=True))
-    classification = TrackPrediction.classification()
+    classification = TrackPredictionOld.classification()
 
     prediction_titles = []
     prediction_texts = []

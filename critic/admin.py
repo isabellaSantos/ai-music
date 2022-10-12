@@ -1,3 +1,7 @@
 from django.contrib import admin
+from .models import TrackPrediction
 
-# Register your models here.
+class TrackPredictionAdmin(admin.ModelAdmin):
+  ...
+
+admin.site.register(TrackPrediction, TrackPredictionAdmin)
