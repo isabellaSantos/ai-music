@@ -6,7 +6,7 @@ import os
 import spotipy
 import spotipy.util as util
 
-from .models import SpotifyUser, SpotifyAPIUser, SpotifyAPI, TrackPrediction
+from .models import SpotifyUser, SpotifyAPIUser, SpotifyAPI, PredictionHelper
 
 def authenticate(request):
   client_id = os.environ.get('SPOTIPY_CLIENT_ID')
@@ -35,6 +35,6 @@ def analyse(request, spotify_username):
   top_tracks = SpotifyAPI.top_tracks(spotify_obj)
   top_artists = SpotifyAPI.top_artists(spotify_obj)
 
-  prediction = TrackPrediction.predict_user_tracks(user)
+  prediction = PredictionHelper.predict_user_tracks(user)
   title = "Uhm, você é o tipo %s quando se trata de música" % '-'.join(prediction['titles'])
   return render(request, 'critic/pages/analysis.html', {'title': title,'texts':prediction['texts'], 'top_tracks': top_tracks, 'top_artists': top_artists})

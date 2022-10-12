@@ -154,52 +154,26 @@ class SpotifyAPIUser:
 
     return user
 
-class TrackPredictionOld:
-  def classification():
-    options = [
-      {'id': 1, 'name': 'kpop dinossauro', 'title': 'kpoper-old-school', 'description': 'kpop das antigas, de SHINEe para trás'},
-      {'id': 2, 'name': 'kpop gg', 'title': 'gg-stan', 'description': 'conceitos cute, girl crush, colorido, sexy, retro. Enfim, se for GG, você tá dentro'},
-      {'id': 3, 'name': 'kpop bg', 'title': 'bg-stan', 'description': 'boy group convicta'},
-      {'id': 4, 'name': 'divas pop', 'title': 'briga-no-twitter', 'description': 'divas pop'},
-      {'id': 5, 'name': 'pop 80s / 90s', 'title': 'pop-erudito', 'description': 'pop 80s / 90s'},
-      {'id': 6, 'name': 'pop indie', 'title': 'pitchfork', 'description': 'pop sem pretensão de charts, mas com muita aclamação da crítica'},
-      {'id': 7, 'name': 'indie 00s', 'title': 'indie', 'description': 'indie 00s'},
-      {'id': 8, 'name': 'emo', 'title': 'emo-com-orgulho', 'description': 'emo'},
-      {'id': 9, 'name': 'rock classico', 'title': '🤘', 'description': 'rock classico'},
-      {'id': 10, 'name': 'rock 80s / 90s', 'title': 'rockeirx-cabeludx', 'description': 'rock 80s / 90s'},
-      {'id': 11, 'name': 'hip-hop 00s', 'title': 'hip-hop', 'description': 'hip-hop 00s'},
-      {'id': 12, 'name': 'rap', 'title': 'rap-raiz', 'description': 'rap'},
-      {'id': 13, 'name': 'trap', 'title': 'trap', 'description': 'trap'},
-      {'id': 14, 'name': 'pop br', 'title': 'anitter', 'description': 'pop br'},
-      {'id': 15, 'name': 'sofrencia sertanejo', 'title': 'só-sofrencia', 'description': 'sofrencia'},
-      {'id': 16, 'name': 'piseiro', 'title': 'joao-gomes', 'description': 'piseiro'},
-      {'id': 17, 'name': 'musica classica', 'title': 'bethoven', 'description': 'musica classica'},
-      {'id': 18, 'name': 'eletronica', 'title': 'tuts-tuts', 'description': 'eletronica'},
-      {'id': 19, 'name': 'tik tok', 'title': 'tiktoker', 'description': 'tiktok gen z'},
-      {'id': 20, 'name': 'charts', 'title': 'bb100', 'description': 'escutar apenas músicas que estão nos topos das paradas e desconhece algo lançado a menos de 2 anos atrás'},
-      {'id': 21, 'name': 'boomer', 'title': 'boomer', 'description': 'música dos anos 80, porque naquela época que as coisas eram boas'},
-      {'id': 22, 'name': 'outros', 'title': '-', 'description': '-'},
-    ]
-    return options
+class PredictionHelper():
 
   def format_prediction(prediction_array):
     prediction = dict(sorted(prediction_array.items(), key=lambda item: item[1], reverse=True))
-    classification = TrackPredictionOld.classification()
 
     prediction_titles = []
     prediction_texts = []
     tot = 0
     for i, idx in enumerate(prediction):
       qtd = prediction[str(idx)]
-      item_class = list(filter(lambda c: c['id'] == int(idx), classification))[0]
+      pred_item = TrackPrediction.objects.get(classification_id=idx)
 
       if i < 4:
-        prediction_titles.append(item_class['title'])
+        prediction_titles.append(pred_item.title)
 
       if tot < 40:
         tot += qtd
         qtd_per = qtd * 100 / 50
-        prediction_texts.append({'description':item_class['description'], 'percentage':qtd_per})
+        prediction_texts.append({'description':pred_item.description, 'percentage':qtd_per})
+    
     return {'titles': prediction_titles, 'texts': prediction_texts}
 
   def format_dataframe(tracks):
@@ -234,23 +208,11 @@ class TrackPredictionOld:
     df = pd.DataFrame.from_dict(data)
     X = df[['release_date', 'acousticness', 'danceability', 'duration_ms', 'energy', 'instrumentalness', 'liveness', 'loudness', 'speechiness', 'tempo', 'valence']]
 
-    # One hot encoder    
-    #ohe = OneHotEncoder()
-    #ohe_array = ohe.fit_transform(df[['artist_genre']]).toarray()
-    #X = pd.concat([X, pd.DataFrame(ohe_array, columns=ohe.categories_[0]).astype(int)], axis=1)
-
-    # label encoding
     le = preprocessing.LabelEncoder()
     le.fit(AllowedGenre.get_list())
     le_genres = le.transform(df['artist_genre'])
     X['artist_genre'] = le_genres
     
-    # Add zero matrix with the other genres
-    #missing_genres = list(set(AllowedGenre.get_list()) - set(ohe.categories_[0]))
-    #zeros = [[ 0 for i in range(len(missing_genres)) ] for j in range(len(X)) ]
-    #X = pd.concat([X, pd.DataFrame(zeros, columns=missing_genres).astype(int)], axis=1)
-    
-    # Pre processamento
     pickle_folder = settings.BASE_DIR / 'critic' / 'lib'
     file_path = os.path.join(pickle_folder, os.path.basename('scaler.sav'))
     file = open(file_path,'rb')
@@ -261,27 +223,24 @@ class TrackPredictionOld:
     
   def predict_user_tracks(user):
     user_tracks = SpotifyTrack.objects.filter(spotify_user_id=user.id)
-    data_df = TrackPrediction.format_dataframe(user_tracks)
+    data_df = PredictionHelper.format_dataframe(user_tracks)
 
-    # carrega o modelo e faz a predicao
     pickle_folder = settings.BASE_DIR / 'critic' / 'lib'
     file_path = os.path.join(pickle_folder, os.path.basename('random_forest_model.sav'))
     file = open(file_path,'rb')
     classifier = pickle.load(file)
     classifiers = classifier.predict(data_df)
 
-    # salvar a classificacao das musicas
     for i, c in enumerate(classifiers):
       classification = classifiers[i]
       track = user_tracks[i]
       track.classification = classification
       track.save()
 
-    # fazer o calculo de cada categoria escolhida
     prediction = {}
     for c in classifiers:
       if str(c) in prediction:
         prediction[str(c)] += 1
       else:
         prediction[str(c)] = 1
-    return TrackPrediction.format_prediction(prediction)
+    return PredictionHelper.format_prediction(prediction)
