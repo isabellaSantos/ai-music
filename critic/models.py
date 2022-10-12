@@ -1,10 +1,12 @@
 from django.db import models
+from django.conf import settings
 from jsonfield import JSONField
 
 import spotipy
 import random
 import pickle
 import os
+import json
 
 import numpy as np
 import pandas as pd
@@ -13,8 +15,6 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn import preprocessing
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.preprocessing import OneHotEncoder
-
-from django.conf import settings
 
 class SpotifyUser(models.Model):
   username = models.CharField(max_length=250)
@@ -69,29 +69,10 @@ class SpotifyAPI:
 
 class AllowedGenre:
   def get_list():
-    return ['k-pop girl group', 'k-pop boy group', 
-            'dance pop', 'eletropop', 'eurodance', 'indie pop', 'uk pop', 'bubblegum pop', 'pop edm', 
-            'soft rock', 'dance rock', 'new wave', 'synthpop', 
-            'glam rock', 'rock-and-roll', 'modern rock', 'indie hip hop', 'hard rock', 'rock', 'alternative rock', 
-            'rap', 'trap', 'pop r&b', 'melodic rap', 'battle rap', 'gangster rap', 'sad rap',
-            'edm', 'electro house', 'house', 'indie rock', 'reggaeton', 'latin', 'latin pop', 
-            'pop lgbtq+ brasileira', 'pop nacional', 'brazilian edm', 'brazilian house',
-            'punk', 'pop emo', 'emo', 'brazilian emo', 'brazilian rock', 
-            'mpb', 'pop teen brasileiro', 'pop rock brasileiro', 'pop punk', 'modern rock', 'pop rock', 
-            'folk', 'indie folk', 'folk-pop', 'modern folk rock', 'praise', 'alternative dance', 'garage rock',
-            'country', 'country rap', 'alternative country', 'country pop', 'contemporary country',
-            'metal', 'grunge', 'progressive rock', 'power metal', 'metalcore', 'glam metal', 'alternative metal',
-            'trap baiano', 'trap brasileiro', 'trap carioca', 'trap funk', 'pop rap brasileiro', 'trap pesado', 
-            'funk ostentacao', 'funk paulista', 'funk viral', 'funk carioca', 'funk 150 bpm',
-            'batidao romantico', 'pagode baiano', 'axe', 'pagode', 'arrochadeira', 'brega romantico', 
-            'forro', 'piseiro', 'brega funk', 'sertanejo pop', 'sertanejo', 'sertanejo universitario', 
-            'bossa nova', 'garage rock', 'art pop', 'baroque pop',
-            'classical performance', 'classical era', 'orchestra', 'early modern classical', 'classical',
-            'choral', 'opera', 'jazz', 'blues', 'jazz saxophone', 'Other',
-            'afro pop', 'ska', 'reggae', 'afrobeat', 'emo rap', 'rare groove', 'new wave pop',
-            'gospel', 'comic', 'british soul', 'neo soul', 'christian alternative rock', 'adoracao', 'nova mpb',
-            'modern funk', 'funk', 'disco', 'soul', 'vocal jazz', 'lounge', 'british jazz', 'swing', 'bow pop',
-            'musica mexicana', 'spanish pop', 'k-pop', 'pop', 'r&b', 'hip hop', 'arrocha', 'classic rock']
+    file_path = os.path.join(settings.BASE_DIR / 'critic' / 'lib', os.path.basename('allowed_genres.json'))
+    json_data = open(file_path)
+    data = json.load(json_data)
+    return data['genres']
 
 class SpotifyAPIUser:
   def get_genre_from_artist(genres):

@@ -1,0 +1,27 @@
+{
+  "genres": [
+    "k-pop girl group", "k-pop boy group", 
+    "dance pop", "eletropop", "eurodance", "indie pop", "uk pop", "bubblegum pop", "pop edm", 
+    "soft rock", "dance rock", "new wave", "synthpop", 
+    "glam rock", "rock-and-roll", "modern rock", "indie hip hop", "hard rock", "rock", "alternative rock", 
+    "rap", "trap", "pop r&b", "melodic rap", "battle rap", "gangster rap", "sad rap",
+    "edm", "electro house", "house", "indie rock", "reggaeton", "latin", "latin pop", 
+    "pop lgbtq+ brasileira", "pop nacional", "brazilian edm", "brazilian house",
+    "punk", "pop emo", "emo", "brazilian emo", "brazilian rock", 
+    "mpb", "pop teen brasileiro", "pop rock brasileiro", "pop punk", "modern rock", "pop rock", 
+    "folk", "indie folk", "folk-pop", "modern folk rock", "praise", "alternative dance", "garage rock",
+    "country", "country rap", "alternative country", "country pop", "contemporary country",
+    "metal", "grunge", "progressive rock", "power metal", "metalcore", "glam metal", "alternative metal",
+    "trap baiano", "trap brasileiro", "trap carioca", "trap funk", "pop rap brasileiro", "trap pesado", 
+    "funk ostentacao", "funk paulista", "funk viral", "funk carioca", "funk 150 bpm",
+    "batidao romantico", "pagode baiano", "axe", "pagode", "arrochadeira", "brega romantico", 
+    "forro", "piseiro", "brega funk", "sertanejo pop", "sertanejo", "sertanejo universitario", 
+    "bossa nova", "garage rock", "art pop", "baroque pop",
+    "classical performance", "classical era", "orchestra", "early modern classical", "classical",
+    "choral", "opera", "jazz", "blues", "jazz saxophone", "Other",
+    "afro pop", "ska", "reggae", "afrobeat", "emo rap", "rare groove", "new wave pop",
+    "gospel", "comic", "british soul", "neo soul", "christian alternative rock", "adoracao", "nova mpb",
+    "modern funk", "funk", "disco", "soul", "vocal jazz", "lounge", "british jazz", "swing", "bow pop",
+    "musica mexicana", "spanish pop", "k-pop", "pop", "r&b", "hip hop", "arrocha", "classic rock"
+  ]
+}
