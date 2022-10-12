@@ -12,6 +12,10 @@ DEBUG = True if os.environ.get('DEBUG') == '1' else False
 
 ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOST', '')]
 
+AIRBRAKE = dict(
+    project_id=os.environ.get('AIRBRAKE_PROJECT_ID', ''),
+    project_key=os.environ.get('AIRBRAKE_PROJECT_KEY', ''),
+)
 
 # Application definition
 
@@ -34,6 +38,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'pybrake.middleware.django.AirbrakeMiddleware',
 ]
 
 ROOT_URLCONF = 'aimusic.urls'
