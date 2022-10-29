@@ -18,7 +18,8 @@ def authenticate(request):
 def storage_data(request):
   token = request.GET.get('code')
   if token:
-    user = SpotifyAPIUser.storage_data(token)
+    spotify = SpotifyAPI.authenticate(request, token)
+    user = SpotifyAPIUser.storage_data(spotify, token)
     return render(request, 'critic/pages/storage_data.html', {'spotify_user': user})
   else:
     return render(request, 'critic/pages/error.html', {})
@@ -31,9 +32,9 @@ def analyse(request, spotify_username):
   except SpotifyUser.DoesNotExist:
     return render(request, 'critic/pages/error.html', {})
 
-  spotify_obj = SpotifyAPI.authenticate(user.spotify_token)
-  top_tracks = SpotifyAPI.top_tracks(spotify_obj)
-  top_artists = SpotifyAPI.top_artists(spotify_obj)
+  spotify = SpotifyAPI.authenticate(request, user.spotify_token)
+  top_tracks = SpotifyAPI.top_tracks(spotify)
+  top_artists = SpotifyAPI.top_artists(spotify)
 
   prediction = PredictionHelper.predict_user_tracks(user)
   title = "Uhm, você é o tipo %s quando se trata de música" % '-'.join(prediction['titles'])

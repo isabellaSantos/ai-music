@@ -43,11 +43,11 @@ class TrackPrediction(models.Model):
     return self.name
 
 class SpotifyAPI:
-  def authenticate(token):
-    auth_manager = spotipy.oauth2.SpotifyOAuth(client_id=os.environ.get('SPOTIPY_CLIENT_ID'),
-                                               client_secret=os.environ.get('SPOTIPY_CLIENT_SECERET'),
-                                               redirect_uri=os.environ.get('SPOTIPY_REDIRECT_URI'),
-                                               scope=os.environ.get('SPOTIPY_SCOPE'))
+  def authenticate(request, token):
+    cache_handler = spotipy.cache_handler.DjangoSessionCacheHandler(request)
+    auth_manager = spotipy.oauth2.SpotifyOAuth(scope=os.environ.get('SPOTIPY_SCOPE'),
+                                               cache_handler=cache_handler,
+                                               show_dialog=False)
     auth_manager.get_access_token(token)
     spotify = spotipy.Spotify(auth_manager=auth_manager)
     return spotify
@@ -112,9 +112,7 @@ class SpotifyAPIUser:
 
     return spotify_data
 
-  def storage_data(token):
-    spotify = SpotifyAPI.authenticate(token)
-
+  def storage_data(spotify, token):
     spotify_user = spotify.current_user()
     user = SpotifyUser(username=spotify_user['id'], spotify_token=token)
     user.save()
